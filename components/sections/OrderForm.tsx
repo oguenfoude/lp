@@ -337,7 +337,7 @@ export default function OrderForm() {
                   <Button
                     type="submit"
                     size="lg"
-                    className="w-full bg-black hover:bg-black/80 text-white font-semibold"
+                    className="w-full bg-[var(--color-dark)] hover:bg-[var(--color-secondary)] text-white font-semibold transition-colors"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? orderFormTexts.processingText : orderFormTexts.submitText}
