@@ -4,16 +4,27 @@
    Custom CSS Variables for Theme
    الألوان الأساسية من theme-config
    ==================== */
+/* Color palette inspired by warm, earthy tones:
+ * - Doctor: #f7f7f7 (Very light gray - backgrounds)
+ * - Jupiter: #e4dfdf (Light gray-beige - secondary backgrounds)
+ * - Summer's End: #e19371 (Warm coral - accents)
+ * - Caramel Dream: #ba6544 (Caramel brown - primary)
+ * - Peanut: #784437 (Rich brown - text)
+ * - Italian Roast: #2b100f (Very dark brown - headings)
+ * - Espresso: #502f2a (Dark brown - secondary text)
+ */
 
 :root {
-  /* Neutral minimal palette */
-  --background: #ffffff;
-  --foreground: #000000; /* force all text to black */
-  --color-primary: #000000; /* buttons / accents can reuse black */
-  --color-secondary: #000000;
-  --color-accent: #000000;
-  --color-dark: #000000;
-  --color-light: #ffffff;
+  /* Warm earthy palette */
+  --background: #f7f7f7; /* Doctor - very light gray */
+  --foreground: #2b100f; /* Italian Roast - very dark brown for text */
+  --color-primary: #ba6544; /* Caramel Dream - primary buttons/accents */
+  --color-secondary: #502f2a; /* Espresso - secondary elements */
+  --color-accent: #e19371; /* Summer's End - warm coral accents */
+  --color-dark: #2b100f; /* Italian Roast - dark text and headings */
+  --color-light: #f7f7f7; /* Doctor - light backgrounds */
+  --color-jupiter: #e4dfdf; /* Jupiter - secondary background tone */
+  --color-peanut: #784437; /* Peanut - rich brown for borders/text */
   --border-radius: 0.5rem;
   --radius: 0.5rem;
 }
@@ -25,11 +36,11 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Remove dark mode overrides for a clean neutral template */
+/* Keep warm palette in dark mode preference */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #ffffff;
-    --foreground: #000000;
+    --background: #f7f7f7;
+    --foreground: #2b100f;
   }
 }
 

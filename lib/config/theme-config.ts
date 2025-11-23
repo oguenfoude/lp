@@ -4,23 +4,31 @@ import type { ThemeConfig } from "@/types";
 // Theme Configuration
 // كل الألوان والخطوط في مكان واحد - سهل التعديل
 // ====================
+// Color palette inspired by warm, earthy tones:
+// - Doctor: #f7f7f7 (Very light gray - backgrounds)
+// - Jupiter: #e4dfdf (Light gray-beige - secondary backgrounds)
+// - Summer's End: #e19371 (Warm coral - accents)
+// - Caramel Dream: #ba6544 (Caramel brown - primary)
+// - Peanut: #784437 (Rich brown - text)
+// - Italian Roast: #2b100f (Very dark brown - headings)
+// - Espresso: #502f2a (Dark brown - secondary text)
 
 export const themeConfig: ThemeConfig = {
   colors: {
-    // Primary: الأزرق - للعناصر الرئيسية والأزرار
-    primary: "#2563EB",
+    // Primary: Caramel Dream - للعناصر الرئيسية والأزرار
+    primary: "#ba6544",
     
-    // Secondary: الأخضر - للنجاح والثقة
-    secondary: "#10B981",
+    // Secondary: Espresso - للعناصر الثانوية والروابط
+    secondary: "#502f2a",
     
-    // Accent: البرتقالي/الكهرماني - للعروض وجذب الانتباه
-    accent: "#F59E0B",
+    // Accent: Summer's End - للعروض وجذب الانتباه
+    accent: "#e19371",
     
-    // Dark: للنصوص الرئيسية
-    dark: "#1F2937",
+    // Dark: Italian Roast - للنصوص الرئيسية والعناوين
+    dark: "#2b100f",
     
-    // Light: للخلفيات
-    light: "#F9FAFB",
+    // Light: Doctor - للخلفيات
+    light: "#f7f7f7",
   },
   
   fonts: {

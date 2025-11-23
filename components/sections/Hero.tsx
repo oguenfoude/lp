@@ -20,7 +20,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative pt-16 pb-8 md:pt-20 md:pb-12 bg-white overflow-hidden">
+    <section className="relative pt-16 pb-8 md:pt-20 md:pb-12 bg-[var(--color-light)] overflow-hidden">
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left: Text Content */}
@@ -32,7 +32,7 @@ export default function Hero() {
               </h1>
             )}
             {hero.subheadline && (
-              <p className="text-lg md:text-xl text-gray-600 mb-6">
+              <p className="text-lg md:text-xl text-[var(--color-peanut)] mb-6">
                 {hero.subheadline}
               </p>
             )}
@@ -42,7 +42,7 @@ export default function Hero() {
               <Button
                 onClick={handleCTAClick}
                 size="lg"
-                className="bg-black hover:bg-black/80 text-white font-semibold text-lg px-8 py-6 mb-6"
+                className="bg-[var(--color-primary)] hover:bg-[var(--color-secondary)] text-white font-semibold text-lg px-8 py-6 mb-6 transition-colors"
               >
                 {hero.ctaText}
               </Button>
@@ -52,8 +52,8 @@ export default function Hero() {
             {hero.trustIndicators.length > 0 && (
               <div className="space-y-2">
                 {hero.trustIndicators.map((indicator, index) => (
-                  <div key={index} className="flex items-center gap-2 text-black">
-                    <Check className="w-4 h-4" aria-hidden="true" />
+                  <div key={index} className="flex items-center gap-2 text-[var(--color-dark)]">
+                    <Check className="w-4 h-4 text-[var(--color-accent)]" aria-hidden="true" />
                     <span className="text-sm md:text-base">{indicator}</span>
                   </div>
                 ))}
