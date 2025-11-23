@@ -31,7 +31,23 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+# local environment & secrets
+.env.local
+.env.integration
+.env.*.backup
+.env.test
+
+# logs & diagnostics
+*.log
+logs/
+
+# editor folders
+.vscode/
+.idea/
+
+# runtime data
+/.turbo
+
 
 # vercel
 .vercel
