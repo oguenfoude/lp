@@ -53,7 +53,7 @@ export default function Header() {
                   unoptimized
                 />
               </div>
-              <span className="text-xl md:text-2xl font-bold text-gray-900">
+              <span className="text-xl md:text-2xl font-bold text-[var(--color-dark)]">
                 {siteConfig.name}
               </span>
             </Link>
@@ -63,7 +63,7 @@ export default function Header() {
           <Button
             onClick={handleOrderClick}
             size="lg"
-            className="bg-black hover:bg-black/80 text-white font-semibold"
+            className="bg-[var(--color-primary)] hover:bg-[var(--color-secondary)] text-white font-semibold transition-colors"
           >
             {siteData.headerCta}
           </Button>

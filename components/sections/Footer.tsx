@@ -11,21 +11,21 @@ export default function Footer() {
   const { footer } = siteData;
 
   return (
-    <footer className="bg-white text-black py-10 border-t">
+    <footer className="bg-[var(--color-jupiter)] text-[var(--color-dark)] py-10 border-t border-[var(--color-peanut)]/20">
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* About */}
           <div>
-            <h3 className="text-xl font-bold mb-4">{siteConfig.name}</h3>
+            <h3 className="text-xl font-bold mb-4 text-[var(--color-dark)]">{siteConfig.name}</h3>
             {footer.description && (
-              <p className="text-sm leading-relaxed">{footer.description}</p>
+              <p className="text-sm leading-relaxed text-[var(--color-peanut)]">{footer.description}</p>
             )}
           </div>
 
           {/* Contact Info */}
           <div>
             {footer.contactTitle && (
-              <h3 className="text-xl font-bold mb-4">{footer.contactTitle}</h3>
+              <h3 className="text-xl font-bold mb-4 text-[var(--color-dark)]">{footer.contactTitle}</h3>
             )}
             <div className="space-y-3">
               {/* Phone */}
@@ -33,7 +33,7 @@ export default function Footer() {
                 <Phone className="w-4 h-4 text-[var(--color-accent)]" />
                 <a
                   href={`tel:${siteConfig.phone}`}
-                  className="text-black hover:underline transition-colors text-sm"
+                  className="text-[var(--color-peanut)] hover:text-[var(--color-primary)] transition-colors text-sm"
                 >
                   {siteConfig.phone}
                 </a>
@@ -42,7 +42,7 @@ export default function Footer() {
               {/* WhatsApp */}
               <div className="flex items-center gap-2">
                 <svg
-                  className="w-4 h-4 text-[var(--color-secondary)]"
+                  className="w-4 h-4 text-[var(--color-accent)]"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -52,7 +52,7 @@ export default function Footer() {
                   href={`https://wa.me/${siteConfig.whatsapp.replace(/[^0-9]/g, "")}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-black hover:underline transition-colors text-sm"
+                  className="text-[var(--color-peanut)] hover:text-[var(--color-primary)] transition-colors text-sm"
                 >
                   {footer.whatsappLabel}
                 </a>
@@ -63,7 +63,7 @@ export default function Footer() {
                 <Mail className="w-4 h-4 text-[var(--color-primary)]" />
                 <a
                   href={`mailto:${siteConfig.email}`}
-                  className="text-black hover:underline transition-colors text-sm"
+                  className="text-[var(--color-peanut)] hover:text-[var(--color-primary)] transition-colors text-sm"
                 >
                   {siteConfig.email}
                 </a>
@@ -76,7 +76,7 @@ export default function Footer() {
                     href={siteConfig.social.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-black hover:underline transition-colors"
+                    className="text-[var(--color-peanut)] hover:text-[var(--color-primary)] transition-colors"
                   >
                     <svg
                       className="w-5 h-5"
@@ -93,7 +93,7 @@ export default function Footer() {
                     href={siteConfig.social.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-black hover:underline transition-colors"
+                    className="text-[var(--color-peanut)] hover:text-[var(--color-primary)] transition-colors"
                   >
                     <svg
                       className="w-5 h-5"
@@ -110,7 +110,7 @@ export default function Footer() {
                     href={siteConfig.social.twitter}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-black hover:underline transition-colors"
+                    className="text-[var(--color-peanut)] hover:text-[var(--color-primary)] transition-colors"
                   >
                     <svg
                       className="w-5 h-5"
@@ -127,8 +127,8 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="pt-6 text-center">
-          <p className="text-sm">{footer.copyright}</p>
+        <div className="pt-6 text-center border-t border-[var(--color-peanut)]/20">
+          <p className="text-sm text-[var(--color-peanut)]">{footer.copyright}</p>
         </div>
       </div>
     </footer>
