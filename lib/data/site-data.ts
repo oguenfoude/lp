@@ -136,7 +136,8 @@ export const siteData: SiteData = {
     name: process.env.NEXT_PUBLIC_PRODUCT_NAME || "كريم طبيعي للوجه",
     price: parseNumber(process.env.NEXT_PUBLIC_PRODUCT_PRICE, 2990),
     deliveryFee: parseNumber(process.env.NEXT_PUBLIC_DELIVERY_FEE, 500),
-    deliveryTime: process.env.NEXT_PUBLIC_DELIVERY_TIME || "24-48 ساعة",
+    // تمت إزالة استخدام deliveryTime من التكامل؛ يبقى اختيارياً للاستخدام الداخلي فقط
+    deliveryTime: process.env.NEXT_PUBLIC_DELIVERY_TIME || "",
   },
 
   // Delivery Types fallback: المنزل / المكتب فقط بدون زيادات لغوية

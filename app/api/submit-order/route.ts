@@ -27,7 +27,7 @@ const GSHEETS_CONFIG = {
 // ════════════════════════════════════════════════════════════════
 
 interface OrderData {
-  storeName: string;
+  // تم إزالة storeName و deliveryTime حسب الطلب
   productName: string;
   productPrice: number;
   quantity: number;
@@ -40,14 +40,13 @@ interface OrderData {
   baldia: string;
   address?: string;
   notes?: string;
-  deliveryTime: string;
 }
 
 interface GSheetsResponse {
   success: boolean;
   message: string;
   data?: {
-    orderId: string;
+    // تمت إزالة orderId من الرد
     timestamp: string;
   };
 }
@@ -103,8 +102,7 @@ export async function POST(request: NextRequest) {
     if (result.success) {
       return NextResponse.json({
         success: true,
-        message: 'تم حفظ الطلب بنجاح',
-        orderId: result.data?.orderId,
+        message: 'تم حفظ الطلب بنجاح'
       });
     } else {
       throw new Error(result.message);
@@ -129,7 +127,6 @@ export async function POST(request: NextRequest) {
 
 function validateOrderData(data: OrderData): { valid: boolean; error?: string } {
   const required = [
-    'storeName',
     'productName',
     'productPrice',
     'quantity',
@@ -174,6 +171,7 @@ function validateOrderData(data: OrderData): { valid: boolean; error?: string } 
 async function sendOrderToGSheets(data: OrderData): Promise<GSheetsResponse> {
   const payload = {
     ...data,
+    // storeName و deliveryTime محذوفان
     secretKey: GSHEETS_CONFIG.secretKey,
     sheetName: GSHEETS_CONFIG.sheetName,
   };

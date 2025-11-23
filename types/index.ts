@@ -23,7 +23,8 @@ export interface ProductInfo {
   name: string;
   price: number; // in DZD
   deliveryFee: number;
-  deliveryTime: string;
+    // تمت إزالة deliveryTime من التكامل الحالي (يمكن إرجاعه لاحقاً عند الحاجة)
+    deliveryTime?: string;
 }
 
 // Footer Link

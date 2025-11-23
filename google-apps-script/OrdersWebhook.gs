@@ -47,8 +47,7 @@ const CONFIG = {
 
 const COLUMNS = [
   'timestamp',        // وقت الطلب
-  'order_id',         // رقم الطلب (تلقائي)
-  'store_name',       // اسم المتجر
+  // تمت إزالة order_id و store_name و delivery_time حسب الطلب
   'product_name',     // اسم المنتج
   'product_price',    // سعر المنتج
   'quantity',         // الكمية
@@ -61,7 +60,6 @@ const COLUMNS = [
   'baldia',           // البلدية
   'address',          // العنوان
   'notes',            // ملاحظات
-  'delivery_time',    // وقت التوصيل المتوقع
   'status'            // حالة الطلب (جديد)
 ];
 
@@ -101,11 +99,10 @@ function doPost(e) {
     const sheet = getOrCreateSheet(sheetName);
     
     // إضافة الطلب
-    const orderId = addOrderToSheet(sheet, data);
+    addOrderToSheet(sheet, data);
     
-    // رد ناجح
+    // رد ناجح (تمت إزالة orderId من الرد)
     return createResponse(true, 'Order saved successfully', {
-      orderId: orderId,
       timestamp: new Date().toISOString()
     });
     
@@ -122,7 +119,7 @@ function doPost(e) {
 function validateOrderData(data) {
   // الحقول المطلوبة
   const required = [
-    'storeName',
+    // تمت إزالة storeName
     'productName',
     'productPrice',
     'quantity',
@@ -224,8 +221,7 @@ function getOrCreateSheet(sheetName) {
       // ترجمة الأعمدة للعربية
       const translations = {
         'timestamp': 'التاريخ والوقت',
-        'order_id': 'رقم الطلب',
-        'store_name': 'اسم المتجر',
+        // تمت إزالة رقم الطلب واسم المتجر
         'product_name': 'المنتج',
         'product_price': 'السعر',
         'quantity': 'الكمية',
@@ -238,7 +234,7 @@ function getOrCreateSheet(sheetName) {
         'baldia': 'البلدية',
         'address': 'العنوان',
         'notes': 'ملاحظات',
-        'delivery_time': 'وقت التوصيل',
+        // تمت إزالة وقت التوصيل
         'status': 'الحالة'
       };
       return translations[col] || col;
@@ -268,10 +264,7 @@ function getOrCreateSheet(sheetName) {
 // ════════════════════════════════════════════════════════════════
 
 function addOrderToSheet(sheet, data) {
-  // توليد رقم طلب فريد
-  const orderId = generateOrderId();
-  
-  // إعداد الصف
+  // إعداد الصف (بدون رقم طلب واسم متجر ووقت التوصيل)
   const timestamp = Utilities.formatDate(
     new Date(), 
     CONFIG.TIMEZONE, 
@@ -280,8 +273,6 @@ function addOrderToSheet(sheet, data) {
   
   const row = [
     timestamp,
-    orderId,
-    data.storeName || '',
     data.productName || '',
     Number(data.productPrice) || 0,
     Number(data.quantity) || 1,
@@ -294,46 +285,27 @@ function addOrderToSheet(sheet, data) {
     data.baldia || '',
     data.address || '',
     data.notes || '',
-    data.deliveryTime || '',
-    'جديد' // حالة افتراضية
+    'جديد'
   ];
   
-  // إضافة الصف في آخر الشيت
   sheet.appendRow(row);
   
-  // تنسيق الصف الجديد
   const lastRow = sheet.getLastRow();
   const range = sheet.getRange(lastRow, 1, 1, row.length);
-  
-  // لون متناوب للصفوف
   if (lastRow % 2 === 0) {
     range.setBackground('#f9f9f9');
   }
-  
-  // محاذاة الأرقام لليمين
-  sheet.getRange(lastRow, 5, 1, 5).setHorizontalAlignment('right');
-  
-  // إرسال إشعار (اختياري)
+  sheet.getRange(lastRow, 3, 1, 5).setHorizontalAlignment('right');
   if (CONFIG.DEBUG_MODE) {
-    Logger.log('Order added: ' + orderId);
+    Logger.log('Order added at row ' + lastRow);
   }
-  
-  return orderId;
 }
 
 // ════════════════════════════════════════════════════════════════
 // دالة: توليد رقم طلب فريد
 // ════════════════════════════════════════════════════════════════
 
-function generateOrderId() {
-  const now = new Date();
-  const year = now.getFullYear().toString().substr(-2);
-  const month = ('0' + (now.getMonth() + 1)).slice(-2);
-  const day = ('0' + now.getDate()).slice(-2);
-  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-  
-  return `ORD${year}${month}${day}-${random}`;
-}
+// تم حذف توليد رقم الطلب generateOrderId
 
 // ════════════════════════════════════════════════════════════════
 // دالة: إنشاء رد JSON
@@ -362,7 +334,6 @@ function createResponse(success, message, data = null) {
 function testWebhook() {
   const testData = {
     secretKey: CONFIG.SECRET_KEY,
-    storeName: 'متجر تجريبي',
     productName: 'منتج تجريبي',
     productPrice: 2990,
     quantity: 1,
@@ -374,8 +345,7 @@ function testWebhook() {
     wilaya: 'الجزائر',
     baldia: 'باب الوادي',
     address: 'شارع الاستقلال، رقم 123',
-    notes: 'طلب تجريبي',
-    deliveryTime: '24-48 ساعة'
+    notes: 'طلب تجريبي'
   };
   
   const mockEvent = {

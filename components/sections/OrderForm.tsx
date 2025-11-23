@@ -42,7 +42,7 @@ export default function OrderForm() {
   // حساب الإجمالي
   const selectedDelivery: DeliveryType | undefined = deliveryTypes.find(d => d.id === formData.deliveryType);
   const deliveryFee = selectedDelivery ? selectedDelivery.fee : product.deliveryFee;
-  const deliveryTime = selectedDelivery ? selectedDelivery.time : product.deliveryTime;
+  // تم إلغاء استخدام deliveryTime في التكامل الحالي (محذوف لتجنب تحذير غير مستخدم)
   const total = calculateTotal(product.price, deliveryFee, formData.quantity);
 
   // Zod Schema
@@ -127,7 +127,7 @@ export default function OrderForm() {
     try {
       // إعداد بيانات الطلب
       const orderData = {
-        storeName: process.env.NEXT_PUBLIC_SITE_NAME || "متجرك",
+        // تم حذف storeName و deliveryTime حسب الطلب لتقليل الأعمدة في الشيت
         productName: product.name,
         productPrice: product.price,
         quantity: formData.quantity,
@@ -140,7 +140,6 @@ export default function OrderForm() {
         baldia: formData.baldia,
         address: formData.address || "",
         notes: formData.notes || "",
-        deliveryTime: deliveryTime,
       };
 
       // إرسال الطلب إلى API
