@@ -1,26 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * ════════════════════════════════════════════════════════════════
- * API Route: Submit Order to Google Sheets
- * ════════════════════════════════════════════════════════════════
- * 
- * هذا الـ Route يستقبل الطلبات من النموذج ويرسلها لـ Google Sheets
- * بشكل آمن (المفاتيح السرية على السيرفر فقط)
- * 
- * ════════════════════════════════════════════════════════════════
+ * API Route: Submit Order (No external integrations)
+ * - Validates payload
+ * - Returns success immediately (suitable for MVP/local use)
  */
-
-// قراءة الإعدادات من Environment Variables
-const GSHEETS_CONFIG = {
-  webappUrl: process.env.GSHEETS_WEBAPP_URL || '',
-  secretKey: process.env.GSHEETS_SECRET_KEY || '',
-  sheetName: process.env.GSHEETS_SHEET_NAME || 'Orders',
-  timeout: parseInt(process.env.INTEGRATION_TIMEOUT_MS || '8000'),
-  retryAttempts: parseInt(process.env.INTEGRATION_RETRY_ATTEMPTS || '2'),
-  enabled: process.env.INTEGRATION_ENABLED === 'true',
-  debug: process.env.INTEGRATION_DEBUG === 'true',
-};
 
 // ════════════════════════════════════════════════════════════════
 // Types
@@ -42,14 +26,7 @@ interface OrderData {
   notes?: string;
 }
 
-interface GSheetsResponse {
-  success: boolean;
-  message: string;
-  data?: {
-    // تمت إزالة orderId من الرد
-    timestamp: string;
-  };
-}
+// No external response types needed
 
 // ════════════════════════════════════════════════════════════════
 // POST Handler
@@ -57,65 +34,31 @@ interface GSheetsResponse {
 
 export async function POST(request: NextRequest) {
   try {
-    // التحقق من تفعيل التكامل
-    if (!GSHEETS_CONFIG.enabled) {
-      if (GSHEETS_CONFIG.debug) {
-        console.log('Integration disabled - order not sent to Google Sheets');
-      }
-      return NextResponse.json({
-        success: true,
-        message: 'تم استلام الطلب (وضع التطوير)',
-        local: true,
-      });
-    }
-
-    // التحقق من وجود الإعدادات المطلوبة
-    if (!GSHEETS_CONFIG.webappUrl || !GSHEETS_CONFIG.secretKey) {
-      console.error('Missing Google Sheets configuration');
-      return NextResponse.json(
-        { 
-          success: false, 
-          message: 'خطأ في إعدادات الخادم' 
-        },
-        { status: 500 }
-      );
-    }
-
-    // قراءة بيانات الطلب
     const orderData: OrderData = await request.json();
-
-    // التحقق من صحة البيانات
     const validation = validateOrderData(orderData);
     if (!validation.valid) {
       return NextResponse.json(
-        { 
-          success: false, 
-          message: validation.error 
-        },
+        { success: false, message: validation.error },
         { status: 400 }
       );
     }
 
-    // إرسال الطلب إلى Google Sheets
-    const result = await sendOrderToGSheets(orderData);
+    // Log safely (avoid printing PII in production)
+    console.log('Order received:', {
+      productName: orderData.productName,
+      quantity: orderData.quantity,
+      deliveryType: orderData.deliveryType,
+      total: orderData.total,
+    });
 
-    if (result.success) {
-      return NextResponse.json({
-        success: true,
-        message: 'تم حفظ الطلب بنجاح'
-      });
-    } else {
-      throw new Error(result.message);
-    }
-
+    return NextResponse.json({
+      success: true,
+      message: 'تم استلام الطلب بنجاح (بدون تكامل خارجي)'
+    });
   } catch (error) {
     console.error('Error submitting order:', error);
-    
     return NextResponse.json(
-      { 
-        success: false, 
-        message: 'حدث خطأ أثناء حفظ الطلب. يرجى المحاولة مرة أخرى.' 
-      },
+      { success: false, message: 'حدث خطأ أثناء معالجة الطلب.' },
       { status: 500 }
     );
   }
@@ -164,73 +107,7 @@ function validateOrderData(data: OrderData): { valid: boolean; error?: string } 
   return { valid: true };
 }
 
-// ════════════════════════════════════════════════════════════════
-// Send to Google Sheets
-// ════════════════════════════════════════════════════════════════
-
-async function sendOrderToGSheets(data: OrderData): Promise<GSheetsResponse> {
-  const payload = {
-    ...data,
-    // storeName و deliveryTime محذوفان
-    secretKey: GSHEETS_CONFIG.secretKey,
-    sheetName: GSHEETS_CONFIG.sheetName,
-  };
-
-  let lastError: Error | null = null;
-
-  // محاولة الإرسال (مع إعادة المحاولة)
-  for (let attempt = 1; attempt <= GSHEETS_CONFIG.retryAttempts; attempt++) {
-    try {
-      if (GSHEETS_CONFIG.debug) {
-        console.log(`Attempt ${attempt} - Sending order to Google Sheets...`);
-      }
-
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), GSHEETS_CONFIG.timeout);
-
-      const response = await fetch(GSHEETS_CONFIG.webappUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const result: GSheetsResponse = await response.json();
-
-      if (GSHEETS_CONFIG.debug) {
-        console.log('Google Sheets response:', result);
-      }
-
-      return result;
-
-    } catch (error) {
-      lastError = error as Error;
-      
-      if (GSHEETS_CONFIG.debug) {
-        console.error(`Attempt ${attempt} failed:`, error);
-      }
-
-      // الانتظار قبل إعادة المحاولة (إلا في المحاولة الأخيرة)
-      if (attempt < GSHEETS_CONFIG.retryAttempts) {
-        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
-      }
-    }
-  }
-
-  // فشلت كل المحاولات
-  return {
-    success: false,
-    message: lastError?.message || 'فشل الاتصال بـ Google Sheets',
-  };
-}
+// No external send function — deliberately removed
 
 // ════════════════════════════════════════════════════════════════
 // GET Handler (للتحقق من أن الـ API يعمل)
@@ -239,10 +116,6 @@ async function sendOrderToGSheets(data: OrderData): Promise<GSheetsResponse> {
 export async function GET() {
   return NextResponse.json({
     success: true,
-    message: 'Orders API is active',
-    config: {
-      enabled: GSHEETS_CONFIG.enabled,
-      configured: !!GSHEETS_CONFIG.webappUrl && !!GSHEETS_CONFIG.secretKey,
-    },
+    message: 'Orders API is active (no external storage)',
   });
 }

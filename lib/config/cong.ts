@@ -150,7 +150,6 @@ export interface CongRoot {
   form: CongFormConfig;
   faq: CongFAQItem[];
   footer: CongFooterConfig;
-  integration: CongIntegrationConfig;
 }
 
 // Helper: parse delivery types from env (id:label:fee|id:label:fee)
@@ -306,12 +305,6 @@ export const cong: CongRoot = {
     instagram: process.env.NEXT_PUBLIC_INSTAGRAM || "",
     facebook: process.env.NEXT_PUBLIC_FACEBOOK || "",
     copyright: process.env.NEXT_PUBLIC_FOOTER_COPYRIGHT || "© 2025 جميع الحقوق محفوظة",
-  },
-  integration: {
-    enabled: process.env.INTEGRATION_ENABLED === "true",
-    sheetUrl: process.env.GSHEETS_WEBAPP_URL,
-    secretKey: process.env.GSHEETS_SECRET_KEY,
-    sheetName: process.env.GSHEETS_SHEET_NAME,
   },
 };
 
