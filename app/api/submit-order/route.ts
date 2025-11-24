@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { appendOrderToSheet } from '@/lib/server/sheets';
+import { sendOrderEmail } from '@/lib/server/email';
 
 /**
  * API Route: Submit Order (No external integrations)
@@ -43,17 +45,74 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Log safely (avoid printing PII in production)
-    console.log('Order received:', {
-      productName: orderData.productName,
-      quantity: orderData.quantity,
-      deliveryType: orderData.deliveryType,
-      total: orderData.total,
-    });
+    // Environment flags
+    const SHEETS_ENABLED = process.env.SHEETS_ENABLED === 'true';
+    const EMAIL_ENABLED = process.env.EMAIL_ENABLED === 'true';
+
+    // Prepare execution flow: save to Google Sheets first, then send email in background
+
+    let sheetSaved = false;
+    if (SHEETS_ENABLED) {
+      const sheetId = process.env.GOOGLE_SHEET_ID || '';
+      const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || '';
+      const privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
+      try {
+        await appendOrderToSheet(sheetId, clientEmail, privateKey, {
+          timestamp: new Date().toISOString(),
+          customerName: orderData.customerName,
+          phone: orderData.phone,
+          wilaya: orderData.wilaya,
+          baldia: orderData.baldia,
+          address: orderData.address || '',
+          deliveryType: orderData.deliveryType,
+          deliveryFee: orderData.deliveryFee,
+          productName: orderData.productName,
+          productPrice: orderData.productPrice,
+          quantity: orderData.quantity,
+          total: orderData.total,
+        });
+        sheetSaved = true;
+      } catch (err) {
+        console.error('Sheets operation setup failed:', err);
+      }
+    }
+
+    if (EMAIL_ENABLED && sheetSaved) {
+      const recipientEmail = process.env.ORDER_NOTIFICATION_EMAIL || '';
+      // Fire-and-forget in background, do not block response
+      Promise.resolve()
+        .then(() =>
+          sendOrderEmail(
+            {
+              customerName: orderData.customerName,
+              phone: orderData.phone,
+              wilaya: orderData.wilaya,
+              baldia: orderData.baldia,
+              address: orderData.address,
+              deliveryType: orderData.deliveryType,
+              deliveryFee: orderData.deliveryFee,
+              productName: orderData.productName,
+              productPrice: orderData.productPrice,
+              quantity: orderData.quantity,
+              total: orderData.total,
+            },
+            recipientEmail
+          )
+        )
+        .catch((e) => console.error('Background email error:', e));
+    }
+
+    const sideEffectErrors: string[] = [];
+    if (!sheetSaved && SHEETS_ENABLED) {
+      sideEffectErrors.push('فشل حفظ الطلب في Google Sheets');
+    }
 
     return NextResponse.json({
       success: true,
-      message: 'تم استلام الطلب بنجاح (بدون تكامل خارجي)'
+      message: sideEffectErrors.length
+        ? 'تم استلام الطلب (مع ملاحظات)'
+        : 'تم استلام الطلب بنجاح',
+      sideEffectErrors: sideEffectErrors.length ? sideEffectErrors : undefined,
     });
   } catch (error) {
     console.error('Error submitting order:', error);
