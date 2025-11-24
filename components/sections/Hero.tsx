@@ -2,83 +2,82 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { siteData } from "@/lib/data/site-data";
-import { scrollToElement } from "@/lib/utils";
-import { Check } from "lucide-react";
-
-// ====================
-// Hero Section Component
-// قسم البطل الرئيسي مع العنوان والصورة والمميزات
-// ====================
+import { cong } from "@/lib/config/cong";
+import { formatPrice, scrollToElement } from "@/lib/utils";
 
 export default function Hero() {
-  const { hero } = siteData;
-
-  // دالة للانتقال إلى نموذج الطلب
-  const handleCTAClick = () => {
-    scrollToElement("order-form");
-  };
+  const { hero, product } = cong;
 
   return (
-    <section className="relative pt-16 pb-8 md:pt-20 md:pb-12 bg-white overflow-hidden">
+    <section className="relative pt-16 pb-12 md:pt-20 md:pb-16 bg-white">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left: Text Content */}
-          <div className="text-center lg:text-left">
-            {/* Headline */}
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+          {/* Image - Left on large screens */}
+          {hero.mainImage && (
+            <div className="w-full lg:w-1/2">
+              <div className="relative w-full aspect-square max-w-md mx-auto">
+                <Image
+                  src={hero.mainImage}
+                  alt={product.name}
+                  fill
+                  className="object-contain"
+                  unoptimized
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Content - Right on large screens */}
+          <div className="w-full lg:w-1/2 text-center lg:text-right space-y-6">
             {hero.headline && (
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--color-dark)] mb-4 leading-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
                 {hero.headline}
               </h1>
             )}
+
+            <div className="text-4xl md:text-5xl font-bold">
+              {formatPrice(product.price)}
+            </div>
+
             {hero.subheadline && (
-              <p className="text-lg md:text-xl text-gray-600 mb-6">
+              <p className="text-lg md:text-xl text-[var(--color-muted)] leading-relaxed">
                 {hero.subheadline}
               </p>
             )}
 
-            {/* CTA Button */}
             {hero.ctaText && (
-              <Button
-                onClick={handleCTAClick}
-                size="lg"
-                className="bg-black hover:bg-black/80 text-white font-semibold text-lg px-8 py-6 mb-6"
-              >
-                {hero.ctaText}
-              </Button>
+              <div>
+                <Button
+                  onClick={() => scrollToElement("order-form")}
+                  size="lg"
+                  className="bg-black hover:bg-black/80 text-white font-semibold text-lg px-12 py-6 w-full sm:w-auto"
+                >
+                  {hero.ctaText}
+                </Button>
+              </div>
             )}
 
-            {/* Trust Indicators */}
-            {hero.trustIndicators.length > 0 && (
-              <div className="space-y-2">
-                {hero.trustIndicators.map((indicator, index) => (
-                  <div key={index} className="flex items-center gap-2 text-black">
-                    <Check className="w-4 h-4" aria-hidden="true" />
-                    <span className="text-sm md:text-base">{indicator}</span>
+            {hero.thumbnails && hero.thumbnails.length > 0 && (
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-4">
+                {hero.thumbnails.map((src, i) => (
+                  <div key={i} className="relative w-16 h-16 border border-[var(--color-border)] rounded overflow-hidden hover:border-black transition-colors cursor-pointer">
+                    <Image
+                      src={src}
+                      alt={`صورة ${i + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="64px"
+                      unoptimized
+                    />
                   </div>
                 ))}
               </div>
             )}
           </div>
-
-          {/* Right: Product Image */}
-          {hero.image && (
-            <div className="relative w-full h-[360px] md:h-[480px] lg:h-[560px]">
-              <Image
-                src={hero.image}
-                alt={hero.headline || ""}
-                fill
-                className="object-contain"
-                unoptimized
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-          )}
         </div>
       </div>
-
-      {/* Decorative Background Elements */}
-      {/* Removed decorative colored blobs for neutral template */}
     </section>
   );
 }

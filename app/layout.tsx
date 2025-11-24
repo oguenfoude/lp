@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { siteConfig } from "@/lib/config/site-config";
+import { cong, congCssVariables } from "@/lib/config/cong";
+import { OrderProvider } from "@/lib/context/OrderContext";
 
 // ====================
 // Font Configuration
@@ -18,15 +19,13 @@ const inter = Inter({
 // معلومات الصفحة الأساسية
 // ====================
 export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_SITE_NAME || "متجرك",
-  description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || "منتجات طبيعية عالية الجودة",
-  keywords: ["منتجات", "طبيعية", "الجزائر", "عناية", "جمال"],
-  authors: [{ name: siteConfig.name }],
+  title: cong.site.name,
+  description: cong.site.description,
   openGraph: {
-    title: process.env.NEXT_PUBLIC_SITE_NAME || "متجرك",
-    description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || "منتجات طبيعية عالية الجودة",
+    title: cong.site.name,
+    description: cong.site.description,
     type: "website",
-    locale: (process.env.NEXT_PUBLIC_OG_LOCALE || "ar_DZ"),
+    locale: "ar_DZ",
   },
 };
 
@@ -35,12 +34,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const lang = process.env.NEXT_PUBLIC_LANG || "ar";
-  const dir = process.env.NEXT_PUBLIC_DIR || "rtl";
+  const { lang, dir } = cong.site;
+  const cssVars = congCssVariables();
   return (
     <html lang={lang} dir={dir}>
-      <body className={`${inter.variable} antialiased`}>
-        {children}
+      <body
+        className={`${inter.variable} antialiased bg-[var(--color-bg)] text-[var(--color-fg)]`}
+        style={cssVars as React.CSSProperties}
+      >
+        <OrderProvider>
+          {children}
+        </OrderProvider>
       </body>
     </html>
   );

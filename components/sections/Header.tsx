@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { siteConfig } from "@/lib/config/site-config";
-import { siteData } from "@/lib/data/site-data";
+import { cong } from "@/lib/config/cong";
 import { scrollToElement } from "@/lib/utils";
 
 // ====================
@@ -40,22 +39,20 @@ export default function Header() {
       }`}
     >
       <div className="container-custom">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center min-w-0">
             <Link href="/" className="flex items-center gap-2">
-              <div className="relative w-10 h-10 md:w-12 md:h-12">
+              <div className="relative w-10 h-10 md:w-12 md:h-12 flex-shrink-0">
                 <Image
                   src={process.env.NEXT_PUBLIC_LOGO_IMAGE || "https://placehold.co/120x120?text=Logo&font=source-sans-pro"}
-                  alt={siteConfig.name}
+                  alt={cong.site.name}
                   fill
                   className="object-contain"
                   unoptimized
                 />
               </div>
-              <span className="text-xl md:text-2xl font-bold text-gray-900">
-                {siteConfig.name}
-              </span>
+              <span className="text-lg md:text-xl lg:text-2xl font-bold truncate">{cong.site.name}</span>
             </Link>
           </div>
 
@@ -63,9 +60,9 @@ export default function Header() {
           <Button
             onClick={handleOrderClick}
             size="lg"
-            className="bg-black hover:bg-black/80 text-white font-semibold"
+            className="bg-black hover:bg-black/80 text-white font-semibold text-sm md:text-base whitespace-nowrap flex-shrink-0"
           >
-            {siteData.headerCta}
+            {cong.hero.ctaText}
           </Button>
         </div>
       </div>

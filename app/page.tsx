@@ -1,6 +1,8 @@
 import Header from "@/components/sections/Header";
 import Hero from "@/components/sections/Hero";
+import Gallery from "@/components/sections/Gallery";
 import OrderForm from "@/components/sections/OrderForm";
+import FAQ from "@/components/sections/FAQ";
 import Footer from "@/components/sections/Footer";
 
 // ====================
@@ -18,10 +20,9 @@ export default function Home() {
       <main>
         {/* Hero Section - القسم الرئيسي */}
         <Hero />
-        {/* Features Section - يظهر فقط إذا فعّلت عبر المتغيرات */}
-        {/* <Features /> */}
-        {/* Order Form - نموذج الطلب */}
+        <Gallery />
         <OrderForm />
+        <FAQ />
       </main>
 
       {/* Footer */}

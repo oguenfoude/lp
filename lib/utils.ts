@@ -18,8 +18,37 @@ export function cn(...inputs: ClassValue[]) {
  * @param amount - المبلغ بالدينار الجزائري
  * @returns نص منسق مثل "2,990 DZD"
  */
-export function formatPrice(amount: number): string {
-  return `${amount.toLocaleString("en-US")} DZD`;
+export interface FormatPriceOptions {
+  locale?: string; // default ar-DZ
+  arabicDigits?: boolean; // force Arabic digits
+  withCurrency?: boolean; // include currency symbol
+  symbolPosition?: 'before' | 'after'; // position of symbol
+  symbol?: 'dinar' | 'code'; // dinar = دج, code = DZD
+}
+
+export function formatPrice(amount: number, opts: FormatPriceOptions = {}): string {
+  const {
+    locale = 'ar-DZ',
+    arabicDigits = true,
+    withCurrency = true,
+    symbolPosition = 'after',
+    symbol = 'dinar',
+  } = opts;
+  const safe = Number.isFinite(amount) ? amount : 0;
+  // Use Intl for locale formatting (no decimals)
+  let formatted = safe.toLocaleString(locale, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  // Fallback to en if something odd
+  if (!formatted || /undefined/.test(formatted)) {
+    formatted = safe.toLocaleString('en-US');
+  }
+  // If arabicDigits is false, convert Arabic digits to Latin
+  if (!arabicDigits) {
+    const arabicZero = '٠'.charCodeAt(0);
+    formatted = formatted.replace(/[٠-٩]/g, d => String(d.charCodeAt(0) - arabicZero));
+  }
+  if (!withCurrency) return formatted;
+  const currencySymbol = symbol === 'dinar' ? 'دج' : 'DZD';
+  return symbolPosition === 'before' ? `${currencySymbol} ${formatted}` : `${formatted} ${currencySymbol}`;
 }
 
 /**
