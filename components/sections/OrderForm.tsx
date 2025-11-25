@@ -24,13 +24,13 @@ export default function OrderForm() {
   return (
     <section id="order-form" className="py-12 md:py-16 bg-white">
       <div className="container-custom max-w-4xl">
-        <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">{cong.form.title}</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-900">{cong.form.title}</h2>
 
-        <Card className="p-6 md:p-10 shadow-sm">
+        <Card className="p-6 md:p-10 shadow-xl border-2 border-gray-100 rounded-2xl">
           <form onSubmit={handleSubmit} className="space-y-10">
               {/* Section: Basic Info */}
               <div className="space-y-5">
-                <h3 className="text-xl font-semibold">المعلومات الأساسية</h3>
+                <h3 className="text-xl font-semibold text-gray-900">المعلومات الأساسية</h3>
                 <div className="grid gap-5 md:grid-cols-2">
                   <div>
                     <Label htmlFor="fullName" className="mb-2 block text-sm font-medium">الاسم الكامل *</Label>
@@ -65,7 +65,7 @@ export default function OrderForm() {
 
               {/* Section: Location */}
               <div className="space-y-5">
-                <h3 className="text-xl font-semibold">الموقع</h3>
+                <h3 className="text-xl font-semibold text-gray-900">الموقع</h3>
                 <div className="grid gap-5 md:grid-cols-2">
                   <div>
                     <Label htmlFor="wilaya" className="mb-2 block text-sm font-medium">الولاية *</Label>
@@ -106,9 +106,54 @@ export default function OrderForm() {
                 </div>
               </div>
 
+              {/* Section: Product Options (Color & Size) */}
+              <div className="space-y-5">
+                <h3 className="text-xl font-semibold text-gray-900">خيارات المنتج</h3>
+                <div className="grid gap-5 md:grid-cols-2">
+                  <div>
+                    <Label htmlFor="color" className="mb-2 block text-sm font-medium">اللون *</Label>
+                    <select
+                      id="color"
+                      value={formData.color}
+                      onChange={e => handleChange("color", e.target.value)}
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black ${errors.color ? "border-red-500" : "border-[var(--color-border)]"}`}
+                       aria-invalid={!!errors.color}
+                       aria-describedby={errors.color ? "error-color" : undefined}
+                    >
+                      <option value="">اختر اللون</option>
+                      {cong.product.colors.map((color) => (
+                        <option key={color.id} value={color.id}>
+                          {color.name}
+                        </option>
+                      ))}
+                    </select>
+                      {errors.color && <p id="error-color" className="text-red-500 text-xs mt-1">{errors.color}</p>}
+                  </div>
+                  <div>
+                    <Label htmlFor="size" className="mb-2 block text-sm font-medium">المقاس *</Label>
+                    <select
+                      id="size"
+                      value={formData.size}
+                      onChange={e => handleChange("size", e.target.value)}
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black ${errors.size ? "border-red-500" : "border-[var(--color-border)]"}`}
+                       aria-invalid={!!errors.size}
+                       aria-describedby={errors.size ? "error-size" : undefined}
+                    >
+                      <option value="">اختر المقاس</option>
+                      {cong.product.sizes.map((size) => (
+                        <option key={size.id} value={size.id}>
+                          {size.label}
+                        </option>
+                      ))}
+                    </select>
+                      {errors.size && <p id="error-size" className="text-red-500 text-xs mt-1">{errors.size}</p>}
+                  </div>
+                </div>
+              </div>
+
               {/* Section: Delivery Type */}
               <div className="space-y-5">
-                <h3 className="text-xl font-semibold">طريقة التوصيل</h3>
+                <h3 className="text-xl font-semibold text-gray-900">طريقة التوصيل</h3>
                 <div className="space-y-3">
                   {cong.delivery.types.map(type => (
                     <label
@@ -151,36 +196,16 @@ export default function OrderForm() {
                 )}
               </div>
 
-              {/* Section: Quantity */}
-              <div className="space-y-5">
-                <h3 className="text-xl font-semibold">الكمية</h3>
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => handleChange("quantity", Math.max(1, formData.quantity - 1))}
-                    disabled={formData.quantity <= 1}
-                    className="w-12 h-12 border border-[var(--color-border)] rounded-md hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed font-bold text-xl"
-                  >−</button>
-                  <div className="flex-1 text-center font-bold text-xl">{formData.quantity}</div>
-                  <button
-                    type="button"
-                    onClick={() => handleChange("quantity", formData.quantity + 1)}
-                    className="w-12 h-12 border border-[var(--color-border)] rounded-md hover:bg-gray-50 font-bold text-xl"
-                  >+</button>
-                </div>
-              </div>
-
               {/* Section: Summary */}
               <OrderSummary
                 productSubtotal={productSubtotal}
                 deliveryPrice={deliveryPrice}
                 totalPrice={totalPrice}
-                quantity={formData.quantity}
               />
 
               <Button
                 type="submit"
-                className="w-full bg-black hover:bg-black/80 text-white font-semibold py-6 text-lg"
+                className="w-full bg-gradient-to-r from-black to-gray-800 hover:from-gray-800 hover:to-black text-white font-semibold py-6 text-lg shadow-xl hover:shadow-2xl transition-all"
               >
                 {cong.form.submitButton}
               </Button>

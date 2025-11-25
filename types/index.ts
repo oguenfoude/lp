@@ -88,6 +88,19 @@ export interface ThemeConfig {
   borderRadius: string;
 }
 
+// Color Option (for shoes)
+export interface Color {
+  id: string; // e.g. 'black', 'white'
+  name: string; // Arabic name e.g. 'أسود'
+  hex: string; // Color code e.g. '#000000'
+}
+
+// Size Option (for shoes)
+export interface Size {
+  id: string; // e.g. '39', '40'
+  label: string; // Display label e.g. '39'
+}
+
 // Order Form Data
 export interface OrderFormData {
   name: string;
@@ -99,6 +112,8 @@ export interface OrderFormData {
   baldia: string;
   deliveryType: string; // id referencing DeliveryType.id
   quantity: number; // عدد الوحدات، القيمة الافتراضية 1
+  color?: string; // Selected color ID for shoes
+  size?: string; // Selected size ID for shoes
 }
 
 // Form Validation Errors

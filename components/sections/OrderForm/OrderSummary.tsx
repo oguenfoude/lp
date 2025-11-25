@@ -8,12 +8,10 @@ interface OrderSummaryProps {
   quantity: number;
 }
 
-export default function OrderSummary({ productSubtotal, deliveryPrice, totalPrice, quantity }: OrderSummaryProps) {
+export default function OrderSummary({ productSubtotal, deliveryPrice, totalPrice }: Omit<OrderSummaryProps, 'quantity'>) {
   // Destructure & precompute to avoid repeated deep access / function calls
   const { summary } = cong.form;
-  const unitPrice = cong.product.price;
   const formatOpts = { locale: 'ar-DZ', arabicDigits: true, withCurrency: true, symbol: 'dinar', symbolPosition: 'after' } as const;
-  const formattedUnit = formatPrice(unitPrice, formatOpts);
   const formattedSubtotal = formatPrice(productSubtotal, formatOpts);
   const formattedDelivery = formatPrice(deliveryPrice, formatOpts);
   const formattedTotal = formatPrice(totalPrice, formatOpts);
@@ -24,9 +22,7 @@ export default function OrderSummary({ productSubtotal, deliveryPrice, totalPric
 
       <div className="flex justify-between text-sm">
         <span className="text-[var(--color-muted)]">{summary.productLabel}</span>
-        <span className="font-medium">
-          {quantity} × {formattedUnit} = {formattedSubtotal}
-        </span>
+        <span className="font-medium">{formattedSubtotal}</span>
       </div>
 
       <div className="flex justify-between text-sm">

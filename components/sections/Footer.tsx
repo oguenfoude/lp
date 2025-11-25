@@ -1,75 +1,88 @@
-import { cong, congSocials } from "@/lib/config/cong";
+import { cong } from "@/lib/config/cong";
+import { Phone, Mail, Instagram, Facebook } from "lucide-react";
 import Image from "next/image";
 
 export default function Footer() {
   const { footer, site } = cong;
-  // Force local logo if remote placeholder domain used but not desired
-  const logoEnv = process.env.NEXT_PUBLIC_LOGO_IMAGE;
-  const logoSrc = logoEnv && !/placehold\.co/.test(logoEnv) ? logoEnv : "/images/logo/logo.png";
-  // Build display list with fallback icons if congSocials empty
-  const socialsToRender = congSocials.length ? congSocials : [
-    {
-      id: 'instagram',
-      label: 'Instagram',
-      url: 'https://instagram.com/',
-      svg: { viewBox: '0 0 24 24', path: 'M12 2.2c3.18 0 3.56.01 4.81.07 3.03.14 4.45 1.57 4.59 4.59.06 1.25.07 1.63.07 4.81s-.01 3.56-.07 4.81c-.14 3.02-1.56 4.45-4.59 4.59-1.25.06-1.63.07-4.81.07s-3.56-.01-4.81-.07c-3.02-.14-4.45-1.57-4.59-4.59C2.21 15.65 2.2 15.27 2.2 12s.01-3.56.07-4.81c.14-3.02 1.57-4.45 4.59-4.59C8.44 2.21 8.82 2.2 12 2.2Zm0 2.05c-3.1 0-3.47.01-4.69.07-2.19.1-3.21 1.15-3.31 3.31-.06 1.22-.07 1.59-.07 4.69s.01 3.47.07 4.69c.1 2.16 1.13 3.21 3.31 3.31 1.22.06 1.59.07 4.69.07s3.47-.01 4.69-.07c2.16-.1 3.21-1.15 3.31-3.31.06-1.22.07-1.59.07-4.69s-.01-3.47-.07-4.69c-.1-2.16-1.15-3.21-3.31-3.31-1.22-.06-1.59-.07-4.69-.07Zm0 3.87a3.88 3.88 0 1 1 0 7.75 3.88 3.88 0 0 1 0-7.75Zm0 6.35a2.47 2.47 0 1 0 0-4.94 2.47 2.47 0 0 0 0 4.94Zm4.95-7.92a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Z', fill: 'url(#igGradient)', gradient: { id: 'igGradient', stops: [ { offset: '0%', color: '#FEDA75' }, { offset: '25%', color: '#FA7E1E' }, { offset: '50%', color: '#D62976' }, { offset: '75%', color: '#962FBF' }, { offset: '100%', color: '#4F5BD5' } ] } }
-    },
-    {
-      id: 'facebook',
-      label: 'Facebook',
-      url: 'https://facebook.com/',
-      svg: { viewBox: '0 0 24 24', path: 'M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07c0 6.02 4.39 11.01 10.13 11.86v-8.4H7.08v-3.47h3.05V9.43c0-3 1.79-4.66 4.53-4.66 1.31 0 2.69.24 2.69.24v2.95h-1.51c-1.49 0-1.96.93-1.96 1.88v2.25h3.33l-.53 3.47h-2.8v8.4C19.61 23.08 24 18.09 24 12.07Z', fill: '#1877F2' }
-    }
-  ];
-  return (
-    <footer className="bg-white text-black py-10 mt-16 border-t border-[var(--color-border)]">
-      <div className="container-custom flex flex-col items-center gap-5 text-center">
-        {/* Logo + Name */}
-        <div className="flex items-center gap-3">
-          <div className="relative w-14 h-14">
-            <Image
-              src={logoSrc}
-              alt={site.name}
-              fill
-              className="object-contain"
-              unoptimized
-              priority
-            />
-          </div>
-          <span className="text-2xl font-bold tracking-tight">{site.name}</span>
-        </div>
 
-        {/* Social Icons */}
-        <div className="flex items-center gap-4">
-          {socialsToRender.map(s => (
-            <a
-              key={s.id}
-              href={s.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={s.label}
-              className="group transition-transform hover:scale-110"
-            >
-              <svg className="w-7 h-7" viewBox={s.svg.viewBox} role="img" aria-hidden="true">
-                {s.svg.gradient && (
-                  <defs>
-                    <linearGradient id={s.svg.gradient.id} x1="0%" y1="0%" x2="100%" y2="100%">
-                      {s.svg.gradient.stops.map(st => (
-                        <stop key={st.offset} offset={st.offset} stopColor={st.color} />
-                      ))}
-                    </linearGradient>
-                  </defs>
-                )}
-                <path fill={s.svg.fill} d={s.svg.path} />
-              </svg>
-            </a>
-          ))}
+  return (
+    <footer className="bg-gradient-to-b from-gray-50 to-gray-100 text-gray-900 py-16 mt-20 border-t border-gray-200">
+      <div className="container-custom">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+          {/* Brand Section */}
+          <div className="space-y-4 text-center md:text-right">
+            <div className="flex items-center justify-center md:justify-end gap-3">
+              <div className="relative w-16 h-16 flex-shrink-0">
+                <Image
+                  src="/images/logo/logo.png"
+                  alt={site.name}
+                  fill
+                  className="object-contain"
+                  unoptimized
+                />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900">{site.name}</h3>
+            </div>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              {site.description}
+            </p>
+          </div>
+
+          {/* Contact Section */}
+          <div className="space-y-4 text-center">
+            <h4 className="text-lg font-semibold text-gray-900">تواصل معنا</h4>
+            <div className="space-y-3">
+              <a
+                href={`tel:${footer.phone}`}
+                className="flex items-center justify-center gap-2 text-gray-700 hover:text-black transition-colors"
+              >
+                <Phone className="w-4 h-4" />
+                <span className="text-sm">{footer.phone}</span>
+              </a>
+              <a
+                href={`mailto:${footer.email}`}
+                className="flex items-center justify-center gap-2 text-gray-700 hover:text-black transition-colors"
+              >
+                <Mail className="w-4 h-4" />
+                <span className="text-sm">{footer.email}</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Social Section */}
+          <div className="space-y-4 text-center md:text-left">
+            <h4 className="text-lg font-semibold text-gray-900">تابعنا</h4>
+            <div className="flex items-center justify-center md:justify-start gap-4">
+              {footer.instagram && (
+                <a
+                  href={footer.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="w-10 h-10 bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 rounded-lg flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
+                >
+                  <Instagram className="w-5 h-5 text-white" strokeWidth={2} />
+                </a>
+              )}
+              {footer.facebook && (
+                <a
+                  href={footer.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                  className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
+                >
+                  <Facebook className="w-5 h-5 text-white" strokeWidth={2} />
+                </a>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Copyright */}
-        <p className="text-xs text-[var(--color-muted)] leading-relaxed max-w-md">
-          {footer.copyright}
-        </p>
+        <div className="pt-8 border-t border-gray-300 text-center">
+          <p className="text-sm text-gray-600">{footer.copyright}</p>
+        </div>
       </div>
     </footer>
   );

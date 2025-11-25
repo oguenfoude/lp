@@ -39,6 +39,19 @@ export interface CongGallery {
 export interface CongProduct {
   name: string;
   price: number; // DZD
+  colors: CongColor[];
+  sizes: CongSize[];
+}
+
+export interface CongColor {
+  id: string;
+  name: string;
+  hex: string;
+}
+
+export interface CongSize {
+  id: string;
+  label: string;
 }
 
 export interface CongDeliveryType {
@@ -117,6 +130,18 @@ export interface CongFormConfig {
 
 export interface CongFAQItem { q: string; a: string; }
 
+export interface CongWhyUsItem {
+  icon: string; // emoji or icon identifier
+  title: string;
+  description: string;
+}
+
+export interface CongProductHighlight {
+  icon: string; // emoji or icon
+  title: string;
+  description: string;
+}
+
 export interface CongFooterConfig {
   phone: string;
   whatsapp: string;
@@ -148,6 +173,8 @@ export interface CongRoot {
   product: CongProduct;
   delivery: CongDeliveryConfig;
   form: CongFormConfig;
+  productHighlights: CongProductHighlight[];
+  whyUs: CongWhyUsItem[];
   faq: CongFAQItem[];
   footer: CongFooterConfig;
 }
@@ -172,43 +199,58 @@ const dir = process.env.NEXT_PUBLIC_DIR || "rtl";
 
 export const cong: CongRoot = {
   site: {
-    name: process.env.NEXT_PUBLIC_SITE_NAME || "اسم المتجر",
-    description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || "وصف موجز للمتجر أو المنتج",
+    name: process.env.NEXT_PUBLIC_SITE_NAME || "STRIDE",
+    description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || "أحذية رجالية فاخرة - تصميم عصري وجودة استثنائية",
     lang,
     dir,
   },
   theme: {
     colors: {
       bg: "#FFFFFF",
-      fg: "#000000",
-      muted: "#666666",
-      border: "#E5E5E5",
+      fg: "#1A1A1A",
+      muted: "#6B7280",
+      border: "#E5E7EB",
     },
     fonts: {
       body: "Inter, system-ui, sans-serif",
       heading: "Inter, system-ui, sans-serif",
     },
     radii: {
-      base: "0.5rem",
+      base: "0.75rem",
     },
   },
   hero: {
-    headline: process.env.NEXT_PUBLIC_HERO_HEADLINE || "عنوان رئيسي واضح مختصر",
-    subheadline: process.env.NEXT_PUBLIC_HERO_SUBHEADLINE || "وصف فرعي بسيط قابل للتعديل من التكوين الموحد",
-    mainImage: process.env.NEXT_PUBLIC_HERO_IMAGE || "https://placehold.co/900x600?text=Main+Image&font=source-sans-pro",
+    headline: process.env.NEXT_PUBLIC_HERO_HEADLINE || "أحذية STRIDE الرجالية الفاخرة",
+    subheadline: process.env.NEXT_PUBLIC_HERO_SUBHEADLINE || "تصميم عصري يجمع بين الأناقة والراحة - مثالي للارتداء اليومي والمناسبات الخاصة",
+    mainImage: process.env.NEXT_PUBLIC_HERO_IMAGE || "/images/main/hero.avif",
     thumbnails: [],
     ctaText: process.env.NEXT_PUBLIC_HERO_CTA || "اطلب الآن",
   },
   gallery: {
     images: [
-      { src: "https://placehold.co/400x400?text=1", alt: "صورة 1" },
-      { src: "https://placehold.co/400x400?text=2", alt: "صورة 2" },
-      { src: "https://placehold.co/400x400?text=3", alt: "صورة 3" },
+      { src: "/images/main/gallery-1.avif", alt: "حذاء رجالي - منظر جانبي" },
+      { src: "/images/main/gallery-2.avif", alt: "حذاء رجالي - منظر علوي" },
+      { src: "/images/main/gallery-3.avif", alt: "حذاء رجالي - تفاصيل النعل" },
+      { src: "/images/main/gallery-4.avif", alt: "حذاء رجالي - منظر خلفي" },
+      { src: "/images/main/gallery-5.avif", alt: "حذاء رجالي - تفاصيل القماش" },
+      { src: "/images/main/gallery-6.avif", alt: "حذاء رجالي - الاستخدام اليومي" },
     ],
   },
   product: {
-    name: process.env.NEXT_PUBLIC_PRODUCT_NAME || "منتج افتراضي",
-    price: parseInt(process.env.NEXT_PUBLIC_PRODUCT_PRICE || "2990", 10) || 2990,
+    name: process.env.NEXT_PUBLIC_PRODUCT_NAME || "حذاء STRIDE الرجالي الفاخر",
+    price: parseInt(process.env.NEXT_PUBLIC_PRODUCT_PRICE || "3500", 10) || 3500,
+    colors: [
+      { id: "black", name: "أسود كلاسيكي", hex: "#1A1A1A" },
+      { id: "white", name: "أبيض ثلجي", hex: "#F8F9FA" },
+      { id: "gray", name: "رمادي أنثراسايت", hex: "#52525B" },
+    ],
+    sizes: [
+      { id: "40", label: "40" },
+      { id: "41", label: "41" },
+      { id: "42", label: "42" },
+      { id: "43", label: "43" },
+      { id: "44", label: "44" },
+    ],
   },
   delivery: {
     types: parseDeliveryTypes(process.env.NEXT_PUBLIC_DELIVERY_TYPES),
@@ -294,9 +336,26 @@ export const cong: CongRoot = {
       quantityInvalid: "كمية غير صالحة",
     },
   },
+  productHighlights: [
+    { icon: "shield", title: "جودة استثنائية ومتانة", description: "مصنوع من أفضل الخامات المستوردة التي تضمن عمراً طويلاً واستخداماً مريحاً" },
+    { icon: "sparkles", title: "تصميم عصري وأنيق", description: "موديل حصري يجمع بين الكلاسيكية والعصرية، مناسب لجميع الإطلالات" },
+    { icon: "wind", title: "تهوية مثالية ومريحة", description: "نسيج خاص يسمح بمرور الهواء ويمنع التعرق، راحة طوال اليوم" },
+    { icon: "zap", title: "نعل مضاد للانزلاق", description: "تقنية متطورة للنعل توفر ثباتاً وأماناً على جميع الأسطح" },
+    { icon: "target", title: "خفيف ومرن للغاية", description: "وزن خفيف ومرونة عالية تمنحك حرية الحركة والراحة الفائقة" },
+    { icon: "star", title: "متعدد الاستخدامات", description: "مثالي للعمل، النزهات، الرياضة الخفيفة، أو الخروج مع الأصدقاء" },
+  ],
+  whyUs: [
+    { icon: "truck", title: "توصيل سريع وآمن", description: "نوصل طلبك خلال 48-72 ساعة إلى باب منزلك" },
+    { icon: "credit-card", title: "الدفع عند الاستلام", description: "ادفع فقط عندما يصلك المنتج وتتأكد منه" },
+    { icon: "badge-check", title: "منتج أصلي 100%", description: "ضمان الجودة والأصالة على جميع منتجاتنا" },
+    { icon: "headphones", title: "دعم عملاء متميز", description: "فريقنا جاهز للرد على جميع استفساراتك" },
+    { icon: "refresh-cw", title: "إرجاع واستبدال مجاني", description: "يمكنك الإرجاع خلال 7 أيام إذا لم يعجبك المنتج" },
+  ],
   faq: [
-    { q: "كيف يتم التوصيل؟", a: "يتم التواصل لتأكيد العنوان ثم الشحن خلال 48 ساعة." },
-    { q: "هل الدفع عند الاستلام؟", a: "نعم، الدفع نقداً عند الاستلام." },
+    { q: "كيف أختار المقاس المناسب لي؟", a: "يمكنك قياس قدمك بالسنتيمتر ومقارنتها بجدول المقاسات. إذا كان قدمك بين مقاسين، نوصي باختيار المقاس الأكبر للحصول على أقصى راحة. فريق الدعم متاح لمساعدتك في اختيار المقاس المناسب." },
+    { q: "ما هي مدة التوصيل وتكلفته؟", a: "التوصيل يستغرق من 48 إلى 72 ساعة عمل حسب موقعك. تكلفة التوصيل 500 دج لجميع أنحاء الجزائر. سنتواصل معك هاتفياً لتأكيد موعد التسليم المناسب لك." },
+    { q: "هل يمكنني الدفع نقداً عند الاستلام؟", a: "نعم بالتأكيد! نوفر خدمة الدفع عند الاستلام لجميع الطلبات. يمكنك فحص المنتج والتأكد من جودته قبل الدفع للمندوب." },
+    { q: "ماذا لو لم يناسبني المنتج؟ هل يمكن الإرجاع؟", a: "نعم، يمكنك إرجاع أو استبدال المنتج خلال 7 أيام من تاريخ الاستلام. المنتج يجب أن يكون بحالته الأصلية وغير مستعمل. نحن نضمن رضاك الكامل." },
   ],
   footer: {
     phone: process.env.NEXT_PUBLIC_PHONE || "0555123456",
