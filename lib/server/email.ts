@@ -12,6 +12,8 @@ interface OrderEmailData {
   productPrice: number;
   quantity: number;
   total: number;
+  color?: string;
+  size?: string;
 }
 
 function formatPrice(price: number): string {
@@ -64,6 +66,16 @@ function generateEmailHTML(order: OrderEmailData): string {
           <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; font-weight: bold; color: #4a5568;">المنتج:</td>
           <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; color: #2d3748;">${order.productName}</td>
         </tr>
+        ${order.color ? `
+        <tr>
+          <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; font-weight: bold; color: #4a5568;">اللون:</td>
+          <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; color: #2d3748;">${order.color}</td>
+        </tr>` : ''}
+        ${order.size ? `
+        <tr>
+          <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; font-weight: bold; color: #4a5568;">المقاس:</td>
+          <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; color: #2d3748;">${order.size}</td>
+        </tr>` : ''}
         <tr>
           <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; font-weight: bold; color: #4a5568;">السعر:</td>
           <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; color: #2d3748;">${formatPrice(order.productPrice)} دج</td>

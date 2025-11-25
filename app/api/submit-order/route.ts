@@ -26,6 +26,8 @@ interface OrderData {
   baldia: string;
   address?: string;
   notes?: string;
+  color?: string; // اللون المختار للحذاء
+  size?: string; // المقاس المختار للحذاء
 }
 
 // No external response types needed
@@ -70,6 +72,8 @@ export async function POST(request: NextRequest) {
           productPrice: orderData.productPrice,
           quantity: orderData.quantity,
           total: orderData.total,
+          color: orderData.color || '',
+          size: orderData.size || '',
         });
         sheetSaved = true;
       } catch (err) {
@@ -95,6 +99,8 @@ export async function POST(request: NextRequest) {
               productPrice: orderData.productPrice,
               quantity: orderData.quantity,
               total: orderData.total,
+              color: orderData.color,
+              size: orderData.size,
             },
             recipientEmail
           )

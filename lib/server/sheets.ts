@@ -14,6 +14,8 @@ interface OrderRow {
   productPrice: number;
   quantity: number;
   total: number;
+  color?: string;
+  size?: string;
 }
 
 const DESIRED_HEADERS = [
@@ -29,6 +31,8 @@ const DESIRED_HEADERS = [
   'سعر المنتج',
   'الكمية',
   'المجموع الكلي',
+  'اللون',
+  'المقاس',
 ];
 
 async function initializeSheet(
@@ -85,6 +89,8 @@ export async function appendOrderToSheet(
     'سعر المنتج': order.productPrice.toString(),
     'الكمية': order.quantity.toString(),
     'المجموع الكلي': order.total.toString(),
+    'اللون': order.color || '-',
+    'المقاس': order.size || '-',
   };
 
   await sheet.addRow(rowData);

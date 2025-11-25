@@ -11,6 +11,8 @@ export interface OrderFormData {
   address: string;
   deliveryType: string;
   quantity: number;
+  color: string;
+  size: string;
 }
 
 export function useOrderForm() {
@@ -24,13 +26,15 @@ export function useOrderForm() {
     address: "",
     deliveryType: cong.delivery.types[0]?.id || "home",
     quantity: 1,
+    color: "",
+    size: "",
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof OrderFormData, string>>>({});
 
   const selectedDeliveryType = cong.delivery.types.find(t => t.id === formData.deliveryType);
   const deliveryPrice = typeof selectedDeliveryType?.fee === "number" ? selectedDeliveryType.fee : 0;
-  const productSubtotal = cong.product.price * formData.quantity;
+  const productSubtotal = cong.product.price; // Always 1 quantity
   const totalPrice = productSubtotal + deliveryPrice;
 
   const handleChange = (field: string, value: string | number) => {
@@ -58,6 +62,15 @@ export function useOrderForm() {
 
     if (!formData.commune.trim()) {
       newErrors.commune = cong.form.validation.communeRequired;
+    }
+
+    // Color and Size validation
+    if (!formData.color) {
+      newErrors.color = "اللون مطلوب";
+    }
+
+    if (!formData.size) {
+      newErrors.size = "المقاس مطلوب";
     }
 
     // Address required only if delivery type is 'home'
@@ -93,7 +106,7 @@ export function useOrderForm() {
         body: JSON.stringify({
           productName: cong.product.name,
           productPrice: cong.product.price,
-          quantity: formData.quantity,
+          quantity: 1, // Always 1
           deliveryType: formData.deliveryType,
           deliveryFee: deliveryPrice,
           total: totalPrice,
@@ -102,6 +115,8 @@ export function useOrderForm() {
           wilaya: formData.wilaya,
           baldia: formData.commune,
           address: formData.address || undefined,
+          color: formData.color,
+          size: formData.size,
         }),
       });
 
@@ -116,6 +131,8 @@ export function useOrderForm() {
         address: "",
         deliveryType: cong.delivery.types[0]?.id || "home",
         quantity: 1,
+        color: "",
+        size: "",
       });
 
       // Show success modal
