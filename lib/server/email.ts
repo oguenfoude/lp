@@ -11,6 +11,8 @@ interface OrderEmailData {
   productName: string;
   productPrice: number;
   quantity: number;
+  color: string;
+  size: string;
   total: number;
 }
 
@@ -71,6 +73,14 @@ function generateEmailHTML(order: OrderEmailData): string {
         <tr>
           <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; font-weight: bold; color: #4a5568;">الكمية:</td>
           <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; color: #2d3748;">${order.quantity}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; font-weight: bold; color: #4a5568;">اللون:</td>
+          <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; color: #2d3748;">${order.color}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; font-weight: bold; color: #4a5568;">المقاس:</td>
+          <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; color: #2d3748;">${order.size}</td>
         </tr>
         <tr>
           <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; font-weight: bold; color: #4a5568;">نوع التوصيل:</td>

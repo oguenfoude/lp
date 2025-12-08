@@ -13,6 +13,8 @@ interface OrderRow {
   productName: string;
   productPrice: number;
   quantity: number;
+  color: string;
+  size: string;
   total: number;
 }
 
@@ -28,6 +30,8 @@ const DESIRED_HEADERS = [
   'اسم المنتج',
   'سعر المنتج',
   'الكمية',
+  'اللون',
+  'المقاس',
   'المجموع الكلي',
 ];
 
@@ -35,18 +39,47 @@ async function initializeSheet(
   doc: GoogleSpreadsheet,
   sheetIndex: number = 0
 ): Promise<void> {
-  await doc.loadInfo();
-  const sheet = doc.sheetsByIndex[sheetIndex];
-  if (!sheet) {
-    throw new Error(`Sheet at index ${sheetIndex} not found`);
-  }
+  try {
+    await doc.loadInfo();
+    const sheet = doc.sheetsByIndex[sheetIndex];
+    if (!sheet) {
+      throw new Error(`Sheet at index ${sheetIndex} not found`);
+    }
 
-  await sheet.loadHeaderRow();
-  const existingHeaders = sheet.headerValues;
+    // Try to load headers, catch if sheet is completely empty
+    let existingHeaders: string[] = [];
+    try {
+      await sheet.loadHeaderRow();
+      existingHeaders = sheet.headerValues || [];
+    } catch {
+      // Sheet is empty, no headers yet
+      console.log('Sheet is empty, will initialize headers');
+      existingHeaders = [];
+    }
 
-  if (existingHeaders.length === 0) {
-    await sheet.setHeaderRow(DESIRED_HEADERS);
-    console.log('Initialized sheet with Arabic headers');
+    // If no headers exist, set them
+    if (existingHeaders.length === 0) {
+      console.log('Setting up sheet headers...');
+      await sheet.setHeaderRow(DESIRED_HEADERS);
+      console.log('✅ Sheet headers initialized successfully');
+      return;
+    }
+
+    // Verify headers match
+    const headersMatch = DESIRED_HEADERS.every(
+      (header, index) => existingHeaders[index] === header
+    );
+
+    if (!headersMatch) {
+      console.warn('⚠️ Sheet headers do not match expected format');
+      console.log('Expected:', DESIRED_HEADERS);
+      console.log('Found:', existingHeaders);
+    } else {
+      console.log('✅ Sheet headers verified');
+    }
+  } catch (error) {
+    console.error('❌ Error initializing sheet:', error);
+    throw new Error(`Failed to initialize Google Sheet: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 
@@ -84,6 +117,8 @@ export async function appendOrderToSheet(
     'اسم المنتج': order.productName,
     'سعر المنتج': order.productPrice.toString(),
     'الكمية': order.quantity.toString(),
+    'اللون': order.color,
+    'المقاس': order.size,
     'المجموع الكلي': order.total.toString(),
   };
 
