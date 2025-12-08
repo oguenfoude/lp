@@ -1,29 +1,29 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Cairo } from "next/font/google";
 import "./globals.css";
-import { cong, congCssVariables } from "@/lib/config/cong";
-import { OrderProvider } from "@/lib/context/OrderContext";
 
 // ====================
 // Font Configuration
-// استخدام Inter للعربية والإنجليزية
+// Cairo - Best Arabic font for e-commerce
 // ====================
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  variable: "--font-cairo",
   display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 // ====================
 // Metadata Configuration
-// معلومات الصفحة الأساسية
+// حجاب الأميرة - Landing Page
 // ====================
 export const metadata: Metadata = {
-  title: cong.site.name,
-  description: cong.site.description,
+  title: "حجاب الأميرة الفاخر | أناقة بلا حدود",
+  description: "حجاب فاخر بتصميم ملكي من أجود أنواع القماش. توصيل لجميع الولايات الـ58 مع الدفع عند الاستلام.",
+  keywords: ["حجاب", "hijab", "أزياء محجبات", "الجزائر", "fashion"],
   openGraph: {
-    title: cong.site.name,
-    description: cong.site.description,
+    title: "حجاب الأميرة الفاخر",
+    description: "حجاب فاخر بتصميم ملكي من أجود أنواع القماش",
     type: "website",
     locale: "ar_DZ",
   },
@@ -34,17 +34,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { lang, dir } = cong.site;
-  const cssVars = congCssVariables();
   return (
-    <html lang={lang} dir={dir}>
+    <html lang="ar" dir="rtl">
       <body
-        className={`${inter.variable} antialiased bg-[var(--color-bg)] text-[var(--color-fg)]`}
-        style={cssVars as React.CSSProperties}
+        className={`${cairo.variable} font-sans antialiased bg-white text-gray-900`}
       >
-        <OrderProvider>
-          {children}
-        </OrderProvider>
+        {children}
       </body>
     </html>
   );
