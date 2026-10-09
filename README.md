@@ -2,6 +2,10 @@
 
 A modern, production-ready Next.js 16 landing page with integrated order management for Arabic e-commerce. Features Google Sheets integration for order tracking and SMTP email notifications.
 
+## Screenshot
+
+![Homepage](screenshot-home.png)
+
 ## ✨ Features
 
 ### 🎨 Frontend
